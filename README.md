@@ -20,7 +20,7 @@ The workflow combines **classical quantum chemistry (DFT)** with **quantum-inspi
 ## Project Structure
 
 quantum-vqe-nickel/
-│── vqe_nickel.py
+│── ni_complex_vqe.py
 │── README.md
 │── requirements.txt
 │── .gitignore
@@ -85,9 +85,9 @@ Active-space VQE energy : -1234.56789012 Hartree
 Full-system DFT energy : -1234.56789012 Hartree
 Difference (DFT - VQE) : 0.00000000 Hartree
 
-✓ Run completed!
+
 Performance Notes
-Runtime: 10–30 minutes (CPU, depending on system)
+Runtime: 30 minutes to 1 hour (CPU, depending on system)
 Qubits used: 16
 Optimizer iterations: up to 500
 Limitations
