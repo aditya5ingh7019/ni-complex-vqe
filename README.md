@@ -69,7 +69,7 @@ VQE Ground State Energy
 Energy Difference (DFT - VQE)
 Optimizer statistics (iterations, final value)
 
-Results
+Results (Expected)
 
 Running DFT (B3LYP)...
 DFT energy: -1234.56789012 Hartree (-33600.00 eV)
