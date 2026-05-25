@@ -47,10 +47,10 @@ A nickel coordination complex is defined with custom geometry.
 
 ### System Details
 
-- Atoms: 10 atoms
+- Atoms: 8 atoms
   - 1 Ni
   - 4 N
-  - 2 C
+  - 1 C
   - 2 O
   - 1 additional axial ligand atom
 - Total electrons: 90
