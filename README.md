@@ -5,6 +5,8 @@ This project implements a **Variational Quantum Eigensolver (VQE)** simulation t
 
 The workflow combines classical quantum chemistry (DFT) with quantum-inspired optimization (VQE), making it a hybrid quantum-classical simulation.
 
+---
+
 ## Features
 - Density Functional Theory (DFT) baseline using B3LYP
 - Active space reduction for computational feasibility
@@ -14,188 +16,284 @@ The workflow combines classical quantum chemistry (DFT) with quantum-inspired op
 - Energy comparison between DFT and VQE results
 - Checkpoint saving for long-running VQE optimization
 
+---
+
 ## Project Structure
+
+```bash
 quantum-vqe-nickel/
 ├── ni_complex_vqe.py
 ├── README.md
 ├── requirements.txt
 └── .gitignore
-text## Requirements
-Install dependencies using:
 
-```bash
-pip install -r requirements.txt
-Dependencies
+```
 
-numpy
-pyscf
-qiskit
-qiskit-nature
-qiskit-algorithms
+## Dependencies
 
+- numpy
+- pyscf
+- qiskit
+- qiskit-nature
+- qiskit-algorithms
 
-## Methodology
-1. Molecular System
-A nickel coordination complex is defined with custom geometry:
+---
 
-Atoms: 10 atoms (1 Ni, 4 N, 2 C, 2 O, 1 additional C axial ligand)
-Total electrons: 90
-Charge: 0
-Spin (2S): 2 (triplet state)
-Basis set: STO-3G (minimal basis)
+# Methodology
 
-2. Classical Baseline (DFT)
+## 1. Molecular System
 
-Method: B3LYP functional
-Auxiliary basis: def2-svp-jkfit for density fitting
-Grid: Treutler-Ahlrichs radial grids, Becke partitioning
-SCF convergence: Not fully converged after 300 cycles (oscillatory behavior observed)
+A nickel coordination complex is defined with custom geometry.
 
-3. Active Space Reduction
+### System Details
 
-Core orbitals frozen to reduce system size
-Active space: (5, 1) → 5 active electrons in 8 spatial orbitals
-Qubits required: 16 qubits
+- Atoms: 10 atoms
+  - 1 Ni
+  - 4 N
+  - 2 C
+  - 2 O
+  - 1 additional axial ligand atom
+- Total electrons: 90
+- Charge: 0
+- Spin (2S): 2 (triplet state)
+- Basis set: STO-3G (minimal basis)
 
-4. Quantum Simulation (VQE)
+---
 
-Ansatz: UCC (Unitary Coupled Cluster Singles + Doubles)
-Mapper: Parity Mapping
-Optimizer: COBYLA
-Backend: Qiskit Estimator primitive (statevector simulator)
-Parameters: 157 variational parameters
-Checkpointing: Enabled for long runs
+## 2. Classical Baseline (DFT)
 
-Results
-DFT Calculation
-DFT energy (B3LYP): -1967.42190073 Hartree (-53536.30 eV)
-Note: SCF did not fully converge after 300 cycles (oscillations observed between -1966.8 and -1967.4 Hartree). The final reported value is from cycle 300.
-VQE Calculation
+### DFT Configuration
 
-Active space: (5, 1) electrons in 8 orbitals → 16 qubits
-Ansatz parameters: 157
-Initial VQE energy: -2.52766 Hartree
+- Method: B3LYP functional
+- Auxiliary basis: `def2-svp-jkfit`
+- Density fitting enabled
 
-VQE optimization progressed through ~5500+ iterations:
+### Grid Configuration
 
+- Treutler-Ahlrichs radial grids
+- Becke partitioning
 
+### SCF Settings
 
+- SCF cycles: 300
 
+### Observations
 
+- SCF did not fully converge
+- Oscillatory convergence behavior observed
+- Energy oscillated approximately between:
+  - `-1966.8 Ha`
+  - `-1967.4 Ha`
 
+Final reported energy corresponds to the last completed SCF cycle.
 
+---
 
+## 3. Active Space Reduction
 
+To make the quantum simulation computationally feasible:
 
+- Core orbitals were frozen
 
+### Active Space Selected
 
+- 5 active electrons
+- 8 spatial orbitals
 
+### Qubit Requirement
 
+- 16 qubits
 
+---
 
+## 4. Quantum Simulation (VQE)
 
+### Configuration
 
+- Ansatz: UCC (Unitary Coupled Cluster Singles + Doubles)
+- Mapper: Parity Mapper
+- Optimizer: COBYLA
+- Backend: Qiskit Estimator primitive
+- Simulation type: Statevector simulation
+- Variational parameters: 157
+- Checkpointing: Enabled
 
+---
 
+# Results
 
+## DFT Calculation
 
+| Quantity | Value |
+|---|---|
+| Method | B3LYP |
+| Energy (Hartree) | -1967.42190073 |
+| Energy (eV) | -53536.30 |
 
+> **Note:**  
+> SCF did not fully converge after 300 cycles.  
+> Final value corresponds to the last completed cycle.
 
+---
 
+## VQE Calculation
 
+### Active Space
 
+- Electrons: 5
+- Orbitals: 8
+- Qubits: 16
 
+### Ansatz Information
 
+- Parameters: 157
 
+### Initial Energy
 
+```text
+-2.52766 Hartree
+```
 
+---
 
+## Optimization Progress
 
+| Stage | Iterations | Energy (Hartree) |
+|---|---|---|
+| Start | 0 | -2.52766 |
+| Intermediate | ~1000 | ~-2.53090 |
+| Intermediate | ~3000 | ~-2.53145 |
+| Intermediate | ~5000 | ~-2.53145 |
+| Final (Interrupted) | 5500+ | ~-2.53228 |
 
-StageIterationsEnergy (Hartree)Start0-2.52766Intermediate1000~-2.5309Intermediate3000~-2.53145Intermediate5000~-2.53145Final (interrupted)5500+~-2.53228
-Final active-space VQE energy (at interruption): -2.53228 Hartree
-Note: The VQE run was interrupted manually after ~5500 iterations. The optimization showed slow but progressive improvement.
-Energy Comparison
+---
 
+## Final Active-Space Energy
 
+```text
+-2.53228 Hartree
+```
 
+> **Note:**  
+> The VQE optimization was manually interrupted after approximately 5500 iterations.  
+> Optimization showed slow but consistent improvement.
 
+---
 
+# Energy Comparison
 
+| Quantity | Energy (Hartree) | Energy (eV) |
+|---|---|---|
+| DFT (full system) | -1967.42190 | -53536.30 |
+| VQE (active space) | -2.53228 | -68.91 |
+| Difference | -1964.88962 | -53467.39 |
 
+> **Important:**  
+> Direct comparison between full-system DFT energy and active-space VQE energy is not physically meaningful because they correspond to different Hilbert spaces and Hamiltonians.
 
+---
 
+# Performance Notes
 
+| Parameter | Value |
+|---|---|
+| Runtime | >2 hours |
+| VQE iterations | 5500+ |
+| Qubits used | 16 |
+| DFT cycles | 300 |
+| Platform | WSL2 (Ubuntu on Windows) |
+| Threads | 12 |
 
+---
 
+# Technical Observations
 
+## DFT Convergence Issues
 
+- Persistent HOMO > LUMO warnings
+- Oscillatory convergence behavior
+- Failed to converge within 300 cycles
+- Spin state appeared as singlet despite triplet initialization
 
+---
 
+## VQE Optimization Behavior
 
+- Extremely slow convergence
+- Improvement rate approximately:
+  - `~0.0001 Ha per 1000 iterations`
+- Multiple flat optimization plateaus observed
+- Large parameter count created a difficult optimization landscape
 
+---
 
+# Limitations
 
+- Minimal STO-3G basis limits chemical accuracy
+- Active-space approximation may neglect important correlations
+- DFT not fully converged
+- Ideal noiseless simulation only
+- Not executed on real quantum hardware
 
+---
 
+# Future Improvements
 
+Potential future enhancements include:
 
+## Larger Basis Sets
 
-QuantityEnergy (Hartree)Energy (eV)DFT (full system)-1967.42190-53536.30VQE (active space)-2.53228-68.91Difference-1964.88962-53467.39
-Important: Direct comparison between full-system DFT and active-space VQE is not meaningful as they operate on different Hilbert spaces.
-Performance Notes
+- `def2-SVP`
+- `cc-pVDZ`
 
-Runtime: >2 hours (VQE interrupted at 5500+ iterations)
-Qubits used: 16
-DFT cycles: 300 (not fully converged)
-Platform: WSL2 (Ubuntu on Windows), 12 threads
+## Methodological Improvements
 
-Technical Observations
-DFT Convergence Issues
+- CASSCF-based active space selection
+- VQE convergence visualization
 
-Persistent HOMO > LUMO warnings
-Oscillatory convergence behavior
-Failed to converge within 300 cycles
-Spin state appeared as singlet despite initial triplet setting
+## Benchmark Comparisons
 
-VQE Behavior
+- CCSD
+- CASSCF
+- DMRG
 
-Extremely slow convergence (~0.0001 Ha per 1000 iterations)
-Many flat plateaus in energy
-157 parameters create a very challenging optimization landscape
+## Alternative Optimizers
 
-Limitations
+- SLSQP
+- L-BFGS-B
+- SPSA
 
-Minimal basis set (STO-3G) → limited chemical accuracy
-Active space approximation may miss important correlation
-DFT not fully converged
-Ideal statevector simulation (no noise)
-Not executed on real quantum hardware
+## Additional Optimizations
 
-Future Improvements
+- Improved initial parameter guessing
+- Qubit tapering
+- Parameter reduction strategies
 
-Use larger basis sets (def2-SVP, cc-pVDZ, etc.)
-CASSCF-based active space selection
-Convergence plots for VQE
-Comparison with CCSD, CASSCF, DMRG
-Try different optimizers (SLSQP, L-BFGS-B, SPSA)
-Better initial point guessing
-Qubit tapering / parameter reduction
+---
 
-Applications
+# Applications
 
-Quantum chemistry simulations of transition metal complexes
-Benchmarking hybrid quantum-classical algorithms
-Educational demonstration of VQE workflow
+- Quantum chemistry simulation of transition-metal complexes
+- Benchmarking hybrid quantum-classical algorithms
+- Educational demonstrations of VQE workflows
+- Exploration of NISQ-era quantum chemistry methods
 
-Author
-Aditya Singh
-M.Sc. Applied Physics
+---
+
+# Environment Information
+
+| Component | Version |
+|---|---|
+| System | Linux (WSL2) |
+| Python | 3.13.11 |
+| PySCF | 2.12.1 |
+| NumPy | 2.4.3 |
+| SciPy | 1.17.1 |
+
+---
+
+# Author
+
+**Aditya Singh**  
+M.Sc. Applied Physics  
 Amity University, Lucknow
-Environment Information
-
-System: Linux (WSL2)
-Python: 3.13.11
-PySCF: 2.12.1
-numpy: 2.4.3
-scipy: 1.17.1
