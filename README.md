@@ -102,7 +102,7 @@ To make the quantum simulation computationally feasible:
 
 ### Qubit Requirement
 
-- 16 qubits
+- 14 qubits
 
 ---
 
