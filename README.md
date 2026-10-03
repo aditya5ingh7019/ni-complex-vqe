@@ -142,7 +142,7 @@ To make the quantum simulation computationally feasible:
 
 - Electrons: 5
 - Orbitals: 8
-- Qubits: 16
+- Qubits: 14
 
 ### Ansatz Information
 
@@ -199,7 +199,7 @@ To make the quantum simulation computationally feasible:
 |---|---|
 | Runtime | >2 hours |
 | VQE iterations | 5500+ |
-| Qubits used | 16 |
+| Qubits used | 14 |
 | DFT cycles | 300 |
 | Platform | WSL2 (Ubuntu on Windows) |
 | Threads | 12 |
