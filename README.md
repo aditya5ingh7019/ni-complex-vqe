@@ -97,7 +97,7 @@ To make the quantum simulation computationally feasible:
 
 ### Active Space Selected
 
-- 5 active electrons
+- 6 active electrons (5α, 1β)
 - 8 spatial orbitals
 
 ### Qubit Requirement
@@ -175,7 +175,7 @@ To make the quantum simulation computationally feasible:
 ```
 
 > **Note:**  
-> The VQE optimization was manually interrupted after approximately 5500 iterations.  
+> The VQE optimization was manually interrupted after approximately 5500 COBYLA evaluations.  
 > Optimization showed slow but consistent improvement.
 
 ---
